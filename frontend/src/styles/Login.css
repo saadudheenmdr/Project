@@ -1,0 +1,284 @@
+/* ==========================================================================
+   AUTHENTICATION LAYOUT (SHARED STYLES FOR LOGIN & REGISTER)
+   ========================================================================== */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background: #F8FAFC;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #0F172A;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 950px;
+  background: #FFFFFF;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1), 0 0 1px 1px rgba(226, 232, 240, 0.8);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  overflow: hidden;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   LEFT SIDE - BRAND BANNER
+   ========================================================================== */
+.auth-banner {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.95) 100%),
+              url("https://images.unsplash.com/photo-1551522435-b2347f669045?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+  background-size: cover;
+  background-position: center;
+  padding: 50px 40px;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.brand-logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 40px;
+  letter-spacing: -0.5px;
+}
+
+.banner-content h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: #FFFFFF;
+}
+
+.banner-content p {
+  color: #94A3B8;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 35px;
+}
+
+.banner-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 30px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: #E2E8F0;
+  font-weight: 500;
+}
+
+.feature-icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   RIGHT SIDE - FORM SECTION
+   ========================================================================== */
+.auth-form-section {
+  padding: 50px 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-header {
+  margin-bottom: 30px;
+}
+
+.form-header h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.form-header p {
+  color: #64748B;
+  font-size: 0.95rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #E2E8F0;
+  border-radius: 12px;
+  background: #F8FAFC;
+  color: #0F172A;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.input-group input::placeholder {
+  color: #94A3B8;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #0F172A;
+  background: #FFFFFF;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+}
+
+.input-group select {
+  cursor: pointer;
+}
+
+/* Button */
+.auth-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  margin-top: 10px;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+}
+
+.auth-btn:hover {
+  background: #DC2626;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(239, 68, 68, 0.35);
+}
+
+.auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  background: #94A3B8;
+}
+
+/* Footer Links */
+.auth-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #F1F5F9;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-footer p {
+  color: #64748B;
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: #EF4444;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.auth-footer a:hover {
+  color: #DC2626;
+  text-decoration: underline;
+}
+
+.back-home-link {
+  font-size: 0.85rem;
+  color: #94A3B8 !important;
+  font-weight: 500 !important;
+}
+
+.back-home-link:hover {
+  color: #0F172A !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 850px) {
+  .auth-card {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+
+  .auth-banner {
+    padding: 35px 30px;
+    display: none; /* Hide banner on smaller screens for faster form access */
+  }
+
+  .auth-form-section {
+    padding: 40px 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 15px 10px;
+  }
+
+  .auth-form-section {
+    padding: 30px 20px;
+  }
+
+  .form-header h3 {
+    font-size: 1.5rem;
+  }
+}
