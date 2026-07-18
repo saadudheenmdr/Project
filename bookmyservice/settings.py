@@ -18,7 +18,8 @@ SECRET_KEY = 'django-insecure-a^@ckiv%!loibo3h+d4qk2d^8%ss=zv+rf_o2+re)!_v754-%s
 DEBUG = True
 
 # Explicitly allow local traffic
-ALLOWED_HOSTS = ['bookmyservice-git-main-saadudheens-projects.vercel.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
+
 
 # Application definition
 INSTALLED_APPS = [
