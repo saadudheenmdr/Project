@@ -12,4 +12,5 @@ djangorestframework
 django-cors-headers
 pymysql
 dj-database-url
+cryptography    
 whitenoise
