@@ -20,7 +20,6 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <h2>BookMyService</h2>
-
       <div className="nav-links">
         {!token ? (
           <>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // ADDED: For navigation
+import { useNavigate } from 'react-router-dom';
 import API from '../api/axios'; 
 import "../styles/AdminPanel.css";
 
@@ -13,6 +13,8 @@ const AppointmentTable = ({ list = [], onApprove, onReject }) => {
           <th>Customer</th>
           <th>Service</th>
           <th>Time</th>
+          {/* പുതിയ കോളം ചേർത്തു */}
+          <th>Valet Request</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -20,9 +22,29 @@ const AppointmentTable = ({ list = [], onApprove, onReject }) => {
       <tbody>
         {list.map(apt => (
           <tr key={apt.id}>
-            <td>{apt.customer_name || "Unknown Customer"}</td>
+            <td>{apt.customer_name || apt.customerName || apt.name || "Unknown Customer"}</td>
             <td>{apt.service_type || apt.service}</td>
             <td>{apt.service_date || apt.date} @ {apt.service_time || apt.time}</td>
+            
+            {/* Valet വിവരങ്ങൾ കാണിക്കാനുള്ള പുതിയ സെക്ഷൻ */}
+            <td>
+              {apt.request_pickup && (
+                <div style={{ fontSize: '13px', marginBottom: '5px', lineHeight: '1.4' }}>
+                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Pick-up: </span> 
+                  {apt.pickup_location}
+                </div>
+              )}
+              {apt.request_dropoff && (
+                <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
+                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Drop-off: </span> 
+                  {apt.dropoff_location}
+                </div>
+              )}
+              {!apt.request_pickup && !apt.request_dropoff && (
+                <span style={{ color: '#6c757d', fontSize: '13px' }}>Not Requested</span>
+              )}
+            </td>
+
             <td>
               <span className={`status-badge ${
                 apt.status === 'Approved' ? 'status-approved' : 
@@ -49,7 +71,7 @@ const AppointmentTable = ({ list = [], onApprove, onReject }) => {
 };
 
 const AdminAppointment = () => {
-  const navigate = useNavigate(); // ADDED: Hook initialization
+  const navigate = useNavigate();
 
   const [data, setData] = useState({
     metrics: { totalBookings: 0, todayBookings: 0, approvedCount: 0, pendingCount: 0, rejectedCount: 0 },
@@ -82,7 +104,7 @@ const AdminAppointment = () => {
   const handleApprove = async (appointmentId) => {
     try {
       await API.patch(`appointments/admin/appointments/${appointmentId}/status/`, { status: "Approved" });
-      fetchDashboardData(); 
+      fetchDashboardData(); // Instantly refreshes the local lists
     } catch (err) {
       alert("Failed to approve the appointment.");
     }
@@ -91,7 +113,7 @@ const AdminAppointment = () => {
   const handleReject = async (appointmentId) => {
     try {
       await API.patch(`appointments/admin/appointments/${appointmentId}/status/`, { status: "Rejected" });
-      fetchDashboardData(); 
+      fetchDashboardData(); // Instantly refreshes the local lists
     } catch (err) {
       alert("Failed to reject the appointment.");
     }
@@ -104,7 +126,6 @@ const AdminAppointment = () => {
 
   return (
     <div className="admin-container">
-      {/* ADDED: Header wrapper with navigation button */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h1 className="admin-title" style={{ margin: 0 }}>Appointment Management</h1>
         <button 
@@ -140,6 +161,10 @@ const AdminAppointment = () => {
           <div className="metric-title">Approved Services</div>
           <div className="metric-value text-green">{metrics.approvedCount || 0}</div>
         </div>
+        <div onClick={() => setCurrentView('Rejected')} className={`metric-card ${currentView === 'Rejected' ? 'active-card' : ''}`}>
+          <div className="metric-title">Rejected Requests</div>
+          <div className="metric-value text-red">{metrics.rejectedCount || 0}</div>
+        </div>
       </div>
 
       <div className="content-area">
@@ -158,6 +183,7 @@ const AdminAppointment = () => {
         {currentView === 'Today' && <AppointmentTable list={lists.today} onApprove={handleApprove} onReject={handleReject} />}
         {currentView === 'Pending' && <AppointmentTable list={lists.pending} onApprove={handleApprove} onReject={handleReject} />}
         {currentView === 'Approved' && <AppointmentTable list={lists.approved} onApprove={handleApprove} onReject={handleReject} />}
+        {currentView === 'Rejected' && <AppointmentTable list={lists.rejected} onApprove={handleApprove} onReject={handleReject} />}
       </div>
     </div>
   );

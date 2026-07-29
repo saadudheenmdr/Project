@@ -14,6 +14,8 @@ class Appointment(models.Model):
         ('General Service', 'General Service'),
         ('Battery Check', 'Battery Check'),
         ('Wheel Alignment', 'Wheel Alignment'),
+        ('Water Service', 'Water Service'),
+        ('Other', 'Other'),                 
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -26,6 +28,13 @@ class Appointment(models.Model):
     service_date = models.DateField()
     service_time = models.TimeField()
     
+    # --- New Valet Fields ---
+    request_pickup = models.BooleanField(default=False)
+    request_dropoff = models.BooleanField(default=False)
+    pickup_location = models.TextField(blank=True, null=True)
+    dropoff_location = models.TextField(blank=True, null=True)
+    # ------------------------
+
     notes = models.TextField(blank=True, null=True) 
 
     status = models.CharField(

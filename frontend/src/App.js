@@ -15,10 +15,11 @@ import MyVehicles from './pages/MyVehicles';
 import AppointmentHistory from './pages/AppointmentHistory';
 import Profile from './pages/Profile';
 
-// Admin Pages
+// Admin Pages (Ningalude folder structure anusarich path correct aanennurappu varuthuka)
 import AdminDashboard from './components/AdminDashboard';
-import AdminAppointments from './components/AdminAppointments'; 
-
+import AdminAppointments from './components/AdminAppointments';
+import ApprovedServices from './components/ApprovedServices';
+import PendingServices from './components/PendingServices';
 // Security
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -26,10 +27,10 @@ function App() {
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />
-      
+
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
-        
+
         {/* =========================
             Public Routes 
         ========================= */}
@@ -45,25 +46,24 @@ function App() {
             <Dashboard />
           </ProtectedRoute>
         } />
-        
         <Route path="/book-appointment" element={
           <ProtectedRoute userOnly={true}>
             <BookingForm />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/my-vehicles" element={
           <ProtectedRoute userOnly={true}>
             <MyVehicles />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/appointment-history" element={
           <ProtectedRoute userOnly={true}>
             <AppointmentHistory />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/profile" element={
           <ProtectedRoute>
             <Profile />
@@ -78,13 +78,25 @@ function App() {
             <AdminDashboard />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/admin-appointments" element={
           <ProtectedRoute adminOnly={true}>
-            <AdminAppointments /> 
+            <AdminAppointments />
           </ProtectedRoute>
         } />
 
+        <Route path="/approved-services" element={
+          <ProtectedRoute adminOnly={true}>
+            <ApprovedServices />
+          </ProtectedRoute>
+        } />
+        <Route path="/pending-services" element={
+          <ProtectedRoute adminOnly={true}>
+            <PendingServices />
+          </ProtectedRoute>
+        } />
+
+        {/* Catch-all route for undefined paths */}
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </BrowserRouter>

@@ -31,13 +31,15 @@ def dashboard_stats(request):
     
     if request.user.is_staff or getattr(request.user, 'role', '') == 'admin':
         total = Appointment.objects.count()
-        today = Appointment.objects.filter(service_date=today_date).count()
+        # Changed from service_date to created_at__date
+        today = Appointment.objects.filter(created_at__date=today_date).count()
         approved = Appointment.objects.filter(status='Approved').count()
         pending = Appointment.objects.filter(status='Pending').count()
         rejected = Appointment.objects.filter(status='Rejected').count()
     else:
         total = Appointment.objects.filter(user=request.user).count()
-        today = Appointment.objects.filter(user=request.user, service_date=today_date).count()
+        # Changed from service_date to created_at__date
+        today = Appointment.objects.filter(user=request.user, created_at__date=today_date).count()
         approved = Appointment.objects.filter(user=request.user, status='Approved').count()
         pending = Appointment.objects.filter(user=request.user, status='Pending').count()
         rejected = Appointment.objects.filter(user=request.user, status='Rejected').count()
@@ -145,7 +147,8 @@ class AdminDashboardMetricsView(APIView):
         today_date = now().date()
         
         all_apts = Appointment.objects.all().order_by('-id')
-        today_apts = Appointment.objects.filter(service_date=today_date).order_by('-id')
+        # Changed from service_date to created_at__date to fetch bookings made today
+        today_apts = Appointment.objects.filter(created_at__date=today_date).order_by('-id')
         pending_apts = Appointment.objects.filter(status='Pending').order_by('-id')
         approved_apts = Appointment.objects.filter(status='Approved').order_by('-id')
         rejected_apts = Appointment.objects.filter(status='Rejected').order_by('-id')

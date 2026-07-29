@@ -7,12 +7,18 @@ export default function BookingForm() {
   const [vehicles, setVehicles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingVehicles, setIsFetchingVehicles] = useState(true); 
+  
   const [form, setForm] = useState({
     vehicle: "",
     service: "",
     date: "",
     time: "",
     notes: "",
+    requestPickup: false,
+    requestDropoff: false,
+    pickupLocation: "",
+    dropoffLocation: "",
+    sameAsPickup: false,
   });
 
   useEffect(() => {
@@ -32,9 +38,21 @@ export default function BookingForm() {
   }, []);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
+
+    setForm((prev) => {
+      let updatedForm = { ...prev, [name]: inputValue };
+
+      if (name === "sameAsPickup" && checked) {
+        updatedForm.dropoffLocation = prev.pickupLocation;
+      } else if (name === "pickupLocation" && prev.sameAsPickup) {
+        updatedForm.dropoffLocation = value; 
+      } else if (name === "sameAsPickup" && !checked) {
+        updatedForm.dropoffLocation = ""; 
+      }
+
+      return updatedForm;
     });
   };
 
@@ -49,7 +67,11 @@ export default function BookingForm() {
         service_date: form.date,    
         service_time: form.time,    
         notes: form.notes,
-        status: "Pending"
+        status: "Pending",
+        request_pickup: form.requestPickup,
+        request_dropoff: form.requestDropoff,
+        pickup_location: form.requestPickup ? form.pickupLocation : "",
+        dropoff_location: form.requestDropoff ? form.dropoffLocation : "",
       };
 
       await API.post("appointments/", payload);
@@ -61,6 +83,11 @@ export default function BookingForm() {
         date: "",
         time: "",
         notes: "",
+        requestPickup: false,
+        requestDropoff: false,
+        pickupLocation: "",
+        dropoffLocation: "",
+        sameAsPickup: false,
       });
       
     } catch (error) {
@@ -116,12 +143,13 @@ export default function BookingForm() {
           <label>Service Type</label>
           <select name="service" value={form.service} onChange={handleChange} required>
             <option value="">Select Service</option>
-            {/* Added explicit value props to match your Django SERVICE_CHOICES perfectly */}
+            <option value="Water Service">Water Service</option>
             <option value="Oil Change">Oil Change</option>
             <option value="Brake Service">Brake Service</option>
             <option value="General Service">General Service</option>
             <option value="Battery Check">Battery Check</option>
             <option value="Wheel Alignment">Wheel Alignment</option>
+            <option value="Other">Other</option>  
           </select>
 
           <label>Date</label>
@@ -129,6 +157,79 @@ export default function BookingForm() {
 
           <label>Time</label>
           <input type="time" name="time" value={form.time} onChange={handleChange} required />
+
+          {/* ----- NEW: VALET SECTION ----- */}
+          <div className="valet-section">
+            <h3>Pick-up & Drop-off Services</h3>
+            
+            {/* Pick-up Checkbox */}
+            <label className="checkbox-group">
+              <input 
+                type="checkbox" 
+                name="requestPickup" 
+                checked={form.requestPickup} 
+                onChange={handleChange} 
+              />
+              Request Pick-up (Driver collects the vehicle from you)
+            </label>
+
+            {/* Show Pick-up Location if checked */}
+            {form.requestPickup && (
+              <div className="location-input-group">
+                <label>Pick-up Address</label>
+                <textarea 
+                  name="pickupLocation" 
+                  rows="2" 
+                  value={form.pickupLocation} 
+                  onChange={handleChange} 
+                  required 
+                  placeholder="Enter full address for pick-up"
+                />
+              </div>
+            )}
+
+            {/* Drop-off Checkbox */}
+            <label className="checkbox-group">
+              <input 
+                type="checkbox" 
+                name="requestDropoff" 
+                checked={form.requestDropoff} 
+                onChange={handleChange} 
+              />
+              Request Drop-off (Driver returns the vehicle to you)
+            </label>
+
+            {/* Show Drop-off Location if checked */}
+            {form.requestDropoff && (
+              <div className="location-input-group">
+                
+                {/* Show "Same as Pick-up" ONLY if Pick-up is also requested */}
+                {form.requestPickup && (
+                   <label className="checkbox-group" style={{ marginBottom: "10px" }}>
+                     <input 
+                       type="checkbox" 
+                       name="sameAsPickup" 
+                       checked={form.sameAsPickup} 
+                       onChange={handleChange} 
+                     />
+                     Drop-off location is the same as Pick-up
+                   </label>
+                )}
+
+                <label>Drop-off Address</label>
+                <textarea 
+                  name="dropoffLocation" 
+                  rows="2" 
+                  value={form.dropoffLocation} 
+                  onChange={handleChange} 
+                  required 
+                  disabled={form.sameAsPickup}
+                  placeholder="Enter full address for drop-off"
+                />
+              </div>
+            )}
+          </div>
+          {/* ----- END VALET SECTION ----- */}
 
           <label>Additional Notes</label>
           <textarea name="notes" rows="4" value={form.notes} onChange={handleChange} />
