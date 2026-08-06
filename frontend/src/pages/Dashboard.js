@@ -103,7 +103,7 @@ export default function Dashboard() {
         <section className="dashboard-hero">
           <div className="hero-overlay">
             <div className="welcome-badge">👋 Welcome Back, {username}</div>
-            <h1 className="dashboard-title">Your Driver's Dashboard</h1>
+            <h1 className="dashboard-title">Driver's Dashboard</h1>
             <p className="dashboard-subtitle">
               Monitor active appointments, manage your registered vehicles, and book certified 
               auto technicians online without waiting in long garage queues.

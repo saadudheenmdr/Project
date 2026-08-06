@@ -8,13 +8,14 @@ class Appointment(models.Model):
         ('Rejected', 'Rejected'),
     )
 
+    # --- Updated Services based on Frontend Data ---
     SERVICE_CHOICES = (
-        ('Oil Change', 'Oil Change'),
-        ('Brake Service', 'Brake Service'),
-        ('General Service', 'General Service'),
-        ('Battery Check', 'Battery Check'),
-        ('Wheel Alignment', 'Wheel Alignment'),
-        ('Water Service', 'Water Service'),
+        ('Basic Service', 'Basic Service'),
+        ('Standard Service', 'Standard Service'),
+        ('Comprehensive Service', 'Comprehensive Service'),
+        ('Running Repair', 'Running Repair'),
+        ('Jump Start', 'Jump Start'),
+        ('Puncture', 'Puncture'),
         ('Other', 'Other'),                 
     )
 
@@ -28,12 +29,17 @@ class Appointment(models.Model):
     service_date = models.DateField()
     service_time = models.TimeField()
     
-    # --- New Valet Fields ---
+    # --- Valet Fields ---
     request_pickup = models.BooleanField(default=False)
     request_dropoff = models.BooleanField(default=False)
     pickup_location = models.TextField(blank=True, null=True)
     dropoff_location = models.TextField(blank=True, null=True)
-    # ------------------------
+    
+    # --- Home Service Fields ---
+    request_home_service = models.BooleanField(default=False)
+    home_service_address = models.TextField(blank=True, null=True)
+    home_service_location = models.CharField(max_length=255, blank=True, null=True)
+    # -------------------------------
 
     notes = models.TextField(blank=True, null=True) 
 

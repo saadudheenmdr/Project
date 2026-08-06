@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/Navbar.css";
+import styles from "../styles/Navbar.module.css";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -18,47 +18,46 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="navbar">
-      <h2>BookMyService</h2>
-      <div className="nav-links">
+    <nav className={styles.navbar}>
+      {/* Brand / Logo Area */}
+      <Link to="/" className={styles.brand}>
+        <img 
+          src="/pro_logo.png" 
+          alt="BookMyService Logo" 
+          className={styles.logoImage} 
+        />
+        <span className={styles.brandText}>BookMyService</span>
+      </Link>
+
+      {/* Navigation Links & Buttons */}
+      <div className={styles.navLinks}>
         {!token ? (
           <>
-            <Link to="/login">Login</Link> 
-            <Link to="/register">Register</Link>
+            <Link to="/login" className={`${styles.btn} ${styles.btnOutline}`}>
+              Login
+            </Link> 
+            <Link to="/register" className={`${styles.btn} ${styles.btnPrimary}`}>
+              Sign Up
+            </Link>
           </>
         ) : (
           <>
-            {/* FIXED: Lowercased "dashboard" to follow standard routing conventions */}
-            <Link to="/dashboard">Dashboard</Link>
-
-            {/* FIXED: Removed the space to prevent routing failure and false "logouts" */}
-            <Link to="/book-appointment">
-              Book Appointment
+            <Link to="/dashboard" className={styles.navLink}>
+              Dashboard
             </Link>
-
-            <Link to="/my-vehicles">
+            <Link to="/book-appointment" className={styles.navLink}>
+              Book Service
+            </Link>
+            <Link to="/my-vehicles" className={styles.navLink}>
               My Vehicles
             </Link>
-
-            <Link to="/appointment-history">
-              Appointment History
+            <Link to="/appointment-history" className={styles.navLink}>
+              History
             </Link>
-
-            <Link to="/profile">
+            <Link to="/profile" className={styles.navLink}>
               Profile
             </Link>
-
-            <button
-              onClick={logoutUser}
-              style={{
-                background: "red",
-                color: "white",
-                border: "none",
-                padding: "8px 14px",
-                borderRadius: "5px",
-                cursor: "pointer" 
-              }}
-            >
+            <button onClick={logoutUser} className={`${styles.btn} ${styles.btnLogout}`}>
               Logout
             </button>
           </>

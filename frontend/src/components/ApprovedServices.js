@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios"; 
 import "../styles/ApprovedServices.css";
+import { SERVICES_DATA } from '../data/ServicesData'; // Imported SERVICES_DATA
 
 export default function ApprovedServices() {
   const navigate = useNavigate();
@@ -48,45 +49,66 @@ export default function ApprovedServices() {
               <tr>
                 <th>Customer Name</th>
                 <th>Service</th>
+                <th>Price</th> {/* Added Price Column */}
                 <th>Date</th>
                 <th>Time</th>
-                {/* പുതിയ Valet Request കോളം ചേർത്തു */}
-                <th>Valet Request</th>
+                <th>Valet / Home Service</th> {/* Updated Column Name */}
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {approvedList.map((item, index) => (
-                <tr key={item.id || index}>
-                  <td>{item.customer_name || item.customerName || item.name || "Unknown"}</td>
-                  <td>{item.service_type || item.service || "N/A"}</td>
-                  <td>{item.service_date || item.date || "N/A"}</td>
-                  <td>{item.service_time || item.time || "N/A"}</td>
-                  
-                  {/* Valet വിവരങ്ങൾ കാണിക്കാനുള്ള സെക്ഷൻ */}
-                  <td>
-                    {item.request_pickup && (
-                      <div style={{ fontSize: '13px', marginBottom: '5px', lineHeight: '1.4' }}>
-                        <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Pick-up: </span> 
-                        {item.pickup_location}
-                      </div>
-                    )}
-                    {item.request_dropoff && (
-                      <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
-                        <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Drop-off: </span> 
-                        {item.dropoff_location}
-                      </div>
-                    )}
-                    {!item.request_pickup && !item.request_dropoff && (
-                      <span style={{ color: '#6c757d', fontSize: '13px' }}>Not Requested</span>
-                    )}
-                  </td>
+              {approvedList.map((item, index) => {
+                // Extract service name and fetch price from SERVICES_DATA
+                const serviceName = item.service_type || item.service;
+                const serviceInfo = SERVICES_DATA[serviceName];
+                const displayPrice = serviceInfo ? serviceInfo.price : 'N/A';
 
-                  <td>
-                    <span className="status-badge">Approved</span>
-                  </td>
-                </tr>
-              ))}
+                return (
+                  <tr key={item.id || index}>
+                    <td>{item.customer_name || item.customerName || item.name || "Unknown"}</td>
+                    <td>{serviceName || "N/A"}</td>
+                    
+                    {/* Added Price Data Row */}
+                    <td style={{ fontWeight: '600', color: '#0F172A' }}>
+                      {displayPrice}
+                    </td>
+
+                    <td>{item.service_date || item.date || "N/A"}</td>
+                    <td>{item.service_time || item.time || "N/A"}</td>
+                    
+                    {/* Updated to show both Valet and Home Service details */}
+                    <td>
+                      {item.request_home_service ? (
+                        <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
+                          <span style={{ fontWeight: 'bold', color: '#2563EB' }}>🏠 Home Service: </span> 
+                          {item.home_service_address}
+                        </div>
+                      ) : item.request_pickup || item.request_dropoff ? (
+                        <>
+                          {item.request_pickup && (
+                            <div style={{ fontSize: '13px', marginBottom: '5px', lineHeight: '1.4' }}>
+                              <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Pick-up: </span> 
+                              {item.pickup_location}
+                            </div>
+                          )}
+                          {item.request_dropoff && (
+                            <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
+                              <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Drop-off: </span> 
+                              {item.dropoff_location}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <span style={{ color: '#6c757d', fontSize: '13px' }}>Not Requested</span>
+                      )}
+                    </td>
+
+                    <td>
+                      <span className="status-badge">Approved</span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

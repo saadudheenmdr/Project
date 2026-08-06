@@ -15,11 +15,12 @@ import MyVehicles from './pages/MyVehicles';
 import AppointmentHistory from './pages/AppointmentHistory';
 import Profile from './pages/Profile';
 
-// Admin Pages (Ningalude folder structure anusarich path correct aanennurappu varuthuka)
+// Admin Pages
 import AdminDashboard from './components/AdminDashboard';
-import AdminAppointments from './components/AdminAppointments';
+import BookedAppointments from './components/BookedAppointments';
 import ApprovedServices from './components/ApprovedServices';
 import PendingServices from './components/PendingServices';
+
 // Security
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -81,7 +82,7 @@ function App() {
 
         <Route path="/admin-appointments" element={
           <ProtectedRoute adminOnly={true}>
-            <AdminAppointments />
+            <BookedAppointments />
           </ProtectedRoute>
         } />
 
@@ -90,6 +91,7 @@ function App() {
             <ApprovedServices />
           </ProtectedRoute>
         } />
+        
         <Route path="/pending-services" element={
           <ProtectedRoute adminOnly={true}>
             <PendingServices />

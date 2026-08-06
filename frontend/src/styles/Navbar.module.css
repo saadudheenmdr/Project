@@ -1,0 +1,149 @@
+/* ==========================================================================
+   NAVBAR - LIGHT TECH THEME (Matching the provided design)
+   ========================================================================== */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
+  background: #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Brand & Logo */
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 12px;
+}
+
+.logoImage {
+  width: 38px;
+  height: auto;
+}
+
+.brandText {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1F2937;
+  letter-spacing: -0.5px;
+}
+
+/* Links Container */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Standard Links (Authenticated) */
+.navLink {
+  text-decoration: none;
+  color: #6B7280;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover {
+  color: #2563EB;
+}
+
+/* Base Button Styling (Pill shape) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 10px 28px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+  font-family: inherit;
+}
+
+/* Solid Blue Button (e.g., Sign Up) */
+.btnPrimary {
+  background: #2563EB;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+}
+
+.btnPrimary:hover {
+  background: #1D4ED8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+/* Outline Button (e.g., Login) */
+.btnOutline {
+  background: transparent;
+  color: #2563EB;
+  border-color: #2563EB;
+}
+
+.btnOutline:hover {
+  background: #F0F7FF;
+}
+
+/* Outline Red Button (Logout) */
+.btnLogout {
+  background: transparent;
+  color: #EF4444;
+  border-color: #EF4444;
+  padding: 8px 24px;
+}
+
+.btnLogout:hover {
+  background: #EF4444;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .navLinks {
+    gap: 20px;
+  }
+  
+  .navLink {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    padding: 15px 5%;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 5%;
+  }
+
+  .brandText {
+    font-size: 1.4rem;
+  }
+
+  .navLinks {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+  }
+}

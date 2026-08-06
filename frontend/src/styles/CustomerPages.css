@@ -347,3 +347,82 @@ button{
     font-size: 14px;
     color: var(--primary);
 }
+/* Service Details Card Styles */
+.service-details-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 15px 0;
+}
+
+.service-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.service-title {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.service-price-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.service-duration {
+  background-color: #eee;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.service-original-price {
+  text-decoration: line-through;
+  color: #888;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.service-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e3000f;
+}
+
+.service-features {
+  padding-left: 20px;
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.service-features li {
+  margin-bottom: 5px;
+}
+
+.service-inclusions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.inclusion-item {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #444;
+}
+
+.check-icon {
+  color: green;
+  margin-right: 8px;
+}

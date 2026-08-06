@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios'; 
 import "../styles/AdminPanel.css";
+import { SERVICES_DATA } from '../data/ServicesData';
 
 const AppointmentTable = ({ list = [], onApprove, onReject }) => {
   if (list.length === 0) return <p className="no-data-msg">No appointments found.</p>;
@@ -12,65 +13,86 @@ const AppointmentTable = ({ list = [], onApprove, onReject }) => {
         <tr>
           <th>Customer</th>
           <th>Service</th>
+          <th>Price</th>
           <th>Time</th>
-          {/* പുതിയ കോളം ചേർത്തു */}
-          <th>Valet Request</th>
+          <th>Valet / Home Service</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {list.map(apt => (
-          <tr key={apt.id}>
-            <td>{apt.customer_name || apt.customerName || apt.name || "Unknown Customer"}</td>
-            <td>{apt.service_type || apt.service}</td>
-            <td>{apt.service_date || apt.date} @ {apt.service_time || apt.time}</td>
-            
-            {/* Valet വിവരങ്ങൾ കാണിക്കാനുള്ള പുതിയ സെക്ഷൻ */}
-            <td>
-              {apt.request_pickup && (
-                <div style={{ fontSize: '13px', marginBottom: '5px', lineHeight: '1.4' }}>
-                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Pick-up: </span> 
-                  {apt.pickup_location}
-                </div>
-              )}
-              {apt.request_dropoff && (
-                <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
-                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Drop-off: </span> 
-                  {apt.dropoff_location}
-                </div>
-              )}
-              {!apt.request_pickup && !apt.request_dropoff && (
-                <span style={{ color: '#6c757d', fontSize: '13px' }}>Not Requested</span>
-              )}
-            </td>
+        {list.map(apt => {
+          // Extract service name and fetch price from SERVICES_DATA
+          const serviceName = apt.service_type || apt.service;
+          const serviceInfo = SERVICES_DATA[serviceName];
+          const displayPrice = serviceInfo ? serviceInfo.price : 'N/A';
 
-            <td>
-              <span className={`status-badge ${
-                apt.status === 'Approved' ? 'status-approved' : 
-                apt.status === 'Pending' ? 'status-pending' : 'status-rejected'
-              }`}>
-                {apt.status}
-              </span>
-            </td>
-            <td>
-              {apt.status === 'Pending' ? (
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button className="approve-btn" onClick={() => onApprove(apt.id)}>Approve</button>
-                  <button className="reject-btn" onClick={() => onReject(apt.id)} style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>Reject</button>
-                </div>
-              ) : (
-                <span className="no-action">-</span>
-              )}
-            </td>
-          </tr>
-        ))}
+          return (
+            <tr key={apt.id}>
+              <td>{apt.customer_name || apt.customerName || apt.name || "Unknown Customer"}</td>
+              <td>{serviceName}</td>
+              
+              {/* Display the mapped price from SERVICES_DATA */}
+              <td style={{ fontWeight: '600', color: '#0F172A' }}>
+                {displayPrice}
+              </td>
+
+              <td>{apt.service_date || apt.date} @ {apt.service_time || apt.time}</td>
+              
+              {/* Section to display Valet and Home Service details */}
+              <td>
+                {apt.request_home_service ? (
+                  <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
+                    <span style={{ fontWeight: 'bold', color: '#2563EB' }}>🏠 Home Service: </span> 
+                    {apt.home_service_address}
+                  </div>
+                ) : apt.request_pickup || apt.request_dropoff ? (
+                  <>
+                    {apt.request_pickup && (
+                      <div style={{ fontSize: '13px', marginBottom: '5px', lineHeight: '1.4' }}>
+                        <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Pick-up: </span> 
+                        {apt.pickup_location}
+                      </div>
+                    )}
+                    {apt.request_dropoff && (
+                      <div style={{ fontSize: '13px', lineHeight: '1.4' }}>
+                        <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Drop-off: </span> 
+                        {apt.dropoff_location}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <span style={{ color: '#6c757d', fontSize: '13px' }}>Not Requested</span>
+                )}
+              </td>
+
+              <td>
+                <span className={`status-badge ${
+                  apt.status === 'Approved' ? 'status-approved' : 
+                  apt.status === 'Pending' ? 'status-pending' : 'status-rejected'
+                }`}>
+                  {apt.status}
+                </span>
+              </td>
+              <td>
+                {apt.status === 'Pending' ? (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="approve-btn" onClick={() => onApprove(apt.id)}>Approve</button>
+                    <button className="reject-btn" onClick={() => onReject(apt.id)} style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>Reject</button>
+                  </div>
+                ) : (
+                  <span className="no-action">-</span>
+                )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
 };
 
-const AdminAppointment = () => {
+const BookedAppointments = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState({
@@ -104,7 +126,7 @@ const AdminAppointment = () => {
   const handleApprove = async (appointmentId) => {
     try {
       await API.patch(`appointments/admin/appointments/${appointmentId}/status/`, { status: "Approved" });
-      fetchDashboardData(); // Instantly refreshes the local lists
+      fetchDashboardData(); 
     } catch (err) {
       alert("Failed to approve the appointment.");
     }
@@ -113,7 +135,7 @@ const AdminAppointment = () => {
   const handleReject = async (appointmentId) => {
     try {
       await API.patch(`appointments/admin/appointments/${appointmentId}/status/`, { status: "Rejected" });
-      fetchDashboardData(); // Instantly refreshes the local lists
+      fetchDashboardData(); 
     } catch (err) {
       alert("Failed to reject the appointment.");
     }
@@ -189,4 +211,4 @@ const AdminAppointment = () => {
   );
 };
 
-export default AdminAppointment;
+export default BookedAppointments;
