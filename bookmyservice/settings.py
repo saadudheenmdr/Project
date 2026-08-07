@@ -1,4 +1,3 @@
-
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -10,15 +9,13 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# 🛠️ UPDATED: Fetches from .env, uses default if not found
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-a^@ckiv%!loibo3h+d4qk2d^8%ss=zv+rf_o2+re)!_v754-%s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# 🛠️ UPDATED: Uses .env to determine DEBUG mode (Set DEBUG=False in production .env)
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-# 🛠️ UPDATED: Fetch allowed hosts from .env
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# 🛠️ UPDATED: Strips whitespace from hosts to prevent parsing errors
+ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')]
 
 
 # Application definition
@@ -51,6 +48,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # 🛠️ ADDED: Required by Render to serve static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,7 +84,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# 🛠️ UPDATED: Fetching Email credentials from .env
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'sahadedappal@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
@@ -94,7 +91,6 @@ WSGI_APPLICATION = 'bookmyservice.wsgi.application'
 
 
 # Database Configuration
-# 🛠️ UPDATED: Database credentials can also be moved to .env for better security
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -102,6 +98,7 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'USER': os.environ.get('DB_USER', 'root'),
         'PASSWORD': os.environ.get('DB_PASSWORD', 'root123'),
+        'PORT': os.environ.get('DB_PORT', '3306'), # 🛠️ ADDED: Port configuration for remote databases
     }
 }
 
@@ -129,11 +126,13 @@ AUTHENTICATION_BACKENDS = [
 
 
 # CORS Allowed Origins Whitelist
-# 🛠️ UPDATED: Added environment variable support for CORS
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    'CORS_ALLOWED_ORIGINS', 
-    "http://localhost:3000,http://127.0.0.1:3000"
-).split(',')
+# 🛠️ UPDATED: Strips whitespace to prevent subtle CORS bugs
+CORS_ALLOWED_ORIGINS = [
+    origin.strip() for origin in os.environ.get(
+        'CORS_ALLOWED_ORIGINS', 
+        "http://localhost:3000,http://127.0.0.1:3000"
+    ).split(',')
+]
 
 # Explicitly allow the Authorization headers to prevent browser pre-flight blocks
 from corsheaders.defaults import default_headers
@@ -149,5 +148,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-# 🛠️ ADDED: STATIC_ROOT is required when deploying Django projects
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+# 🛠️ ADDED: WhiteNoise storage configuration
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
